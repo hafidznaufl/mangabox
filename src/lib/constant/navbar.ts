@@ -13,7 +13,7 @@ export const menuList: NavigationItem[] = [
     name: 'Trending',
   },
   {
-    path: '/new',
-    name: 'New',
+    path: '/about',
+    name: 'About',
   },
 ]

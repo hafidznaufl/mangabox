@@ -1,5 +1,9 @@
+import LandingLayout from '@/components/layout/landing'
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center">Home</div>
+    <LandingLayout>
+      <div className="flex min-h-screen items-center justify-center">Home</div>
+    </LandingLayout>
   )
 }

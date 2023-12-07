@@ -1,8 +1,11 @@
 import type { NextAuthOptions } from 'next-auth'
 import GitHubProvider from 'next-auth/providers/github'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { prisma } from '@/lib/prisma'
-import bcrypt from 'bcrypt'
+
+interface User {
+  name: string
+  id: string
+}
 
 export const options: NextAuthOptions = {
   providers: [
@@ -22,25 +25,42 @@ export const options: NextAuthOptions = {
           type: 'password',
         },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) return null
+      async authorize(credentials, req) {
+        try {
+          const signInRes = await fetch(
+            'http://localhost:3000/api/auth/signin',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(credentials),
+            },
+          )
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        })
+          if (!signInRes.ok) {
+            const errorData = await signInRes.json()
+            console.error('Sign-in failed:', errorData.message)
+            return null
+          }
 
-        if (!user) return null
+          const user = (await signInRes.json()) as User
 
-        const decode = await bcrypt.compare(credentials.password, user.password)
-        if (!decode) return null
-
-        return {
-          name: user.name,
-          id: user.id,
+          return {
+            name: user.name,
+            id: user.id.toString(),
+          } as User
+        } catch (error) {
+          console.error('Error during sign-in:', error)
+          return null
         }
       },
     }),
   ],
+  pages: {
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+  },
   callbacks: {
     jwt({ token, user }) {
       if (!user) return token

@@ -8,14 +8,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from './ui/card'
-import { Label } from './ui/label'
-import { Input } from './ui/input'
-import { Button } from './ui/button'
+} from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
+import { Separator } from '@/components/ui/separator'
+import { useToast } from '@/components/ui/use-toast'
+import {
+  EyeOpenIcon,
+  EyeClosedIcon,
+  GitHubLogoIcon,
+} from '@radix-ui/react-icons'
 
-interface FormData {
+type FormData = {
   name: string
   email: string
   password: string
@@ -23,11 +30,17 @@ interface FormData {
 
 export default function SignUp() {
   const router = useRouter()
+  const { toast } = useToast()
+  const [showPassword, setShowPassword] = useState<boolean>(false)
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     password: '',
   })
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword)
+  }
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -41,7 +54,27 @@ export default function SignUp() {
     e.preventDefault()
 
     try {
-      const res = await fetch('/api/auth/signup', {
+      if (!formData.name || !formData.email || !formData.password) {
+        console.error('Please fill out all fields.')
+        return
+      }
+
+      const emailCheckRes = await fetch(
+        `/api/auth/signup?email=${formData.email}`,
+      )
+      const emailCheckData = await emailCheckRes.json()
+
+      if (!emailCheckRes.ok) {
+        console.error('Error checking email:', emailCheckData.message)
+        return
+      }
+
+      if (emailCheckData && emailCheckData.status === 'error') {
+        console.error(emailCheckData.message)
+        return
+      }
+
+      const signupRes = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,15 +82,13 @@ export default function SignUp() {
         body: JSON.stringify(formData),
       })
 
-      if (!res.ok) {
-        const errorData = await res.json()
+      if (!signupRes.ok) {
+        const errorData = await signupRes.json()
         console.error('Sign-up failed:', errorData.message)
-        // Handle sign-up failure, show an error message, etc.
         return
       }
 
       console.log('Sign-up successful')
-      // Redirect to the sign-in page or another page
       router.push('/')
     } catch (error) {
       console.error('Error during sign-up:', error)
@@ -66,13 +97,13 @@ export default function SignUp() {
 
   return (
     <>
-      <Card className="w-1/4">
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-          <CardDescription>Create Your Account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
+      <Card className="w-1/4 backdrop-blur-sm">
+        <form onSubmit={handleSubmit}>
+          <CardHeader>
+            <CardTitle>Sign Up</CardTitle>
+            <CardDescription>Create Your Account</CardDescription>
+          </CardHeader>
+          <CardContent className="mb-20 mt-4">
             <div className="mb-4 flex flex-col">
               <Label className="mb-2" htmlFor="name">
                 Name:
@@ -95,31 +126,61 @@ export default function SignUp() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                placeholder="example@example.com"
               />
             </div>
             <div className="mb-4 flex flex-col">
               <Label className="mb-2" htmlFor="password">
                 Password:
               </Label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                />
+                <button
+                  type="button"
+                  className="top absolute right-3 top-[10px] focus:outline-none"
+                  onClick={handleTogglePassword}
+                >
+                  {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                </button>
+              </div>
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="grid gap-4">
-          <Button variant={'secondary'} type="submit">
-            Sign Up
-          </Button>
-          <Button variant={'outline'} onClick={() => signIn('github')}>
-            Continue with Github
-          </Button>
-        </CardFooter>
+            <p className="text-sm">
+              Already have an Account?{' '}
+              <b
+                className="cursor-pointer"
+                onClick={() => router.push('/auth/signin')}
+              >
+                Sign In
+              </b>
+            </p>
+          </CardContent>
+          <CardFooter className="grid gap-6">
+            <Button
+              type="submit"
+              onClick={() =>
+                toast({
+                  title: 'Uh oh! Something went wrong.',
+                  description: 'There was a problem with your request.',
+                })
+              }
+            >
+              Sign Up
+            </Button>
+            <Separator />
+            <Button
+              className="gap-2"
+              variant={'outline'}
+              onClick={() => signIn('github')}
+            >
+              <GitHubLogoIcon /> Continue with Github
+            </Button>
+          </CardFooter>
+        </form>
       </Card>
     </>
   )

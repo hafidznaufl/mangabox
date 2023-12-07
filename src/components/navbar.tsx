@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
 
   return (
     <main>
-      <nav className="fixed inset-x-0 top-0 z-20 bg-background shadow-sm backdrop-blur-sm">
+      <nav className="fixed inset-x-0 top-0 z-20 bg-background backdrop-blur-sm">
         <div className="container flex items-center justify-between py-4">
           <h1 className="text-sm font-bold">MangaBox</h1>
           <div className="">
@@ -39,16 +39,20 @@ const Navbar: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <Button
-              variant={'secondary'}
+              variant={'default'}
               size={'sm'}
-              onClick={() => router.push('/auth')}
+              onClick={() => router.push('/auth/signin')}
             >
               Sign In
             </Button>
-            <Button variant={'ghost'} size={'sm'}>
+            <Button
+              variant={'ghost'}
+              size={'sm'}
+              onClick={() => router.push('/auth/signup')}
+            >
               Sign Up
             </Button>
-            {/* <ModeToggle /> */}
+            <ModeToggle />
           </div>
         </div>
       </nav>

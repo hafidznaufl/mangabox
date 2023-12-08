@@ -97,7 +97,7 @@ export default function SignUp() {
 
   return (
     <>
-      <Card className="w-1/4 backdrop-blur-sm">
+      <Card className="backdrop-blur-sm md:w-1/4">
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>

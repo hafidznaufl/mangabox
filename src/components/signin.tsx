@@ -94,7 +94,7 @@ export default function SignIn() {
 
   return (
     <>
-      <Card className="w-1/4 backdrop-blur-sm">
+      <Card className="backdrop-blur-sm md:w-1/4">
         <form onSubmit={handleSubmit}>
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
@@ -135,7 +135,7 @@ export default function SignIn() {
               </div>
             </div>
             <p className="text-sm">
-              Don't have an account ?
+              Don't have an account?{' '}
               <b
                 className="cursor-pointer"
                 onClick={() => router.push('/auth/signup')}

@@ -6,11 +6,19 @@ import { useState, useEffect } from 'react'
 import { ModeToggle } from './dark-mode'
 import { Button } from './ui/button'
 import { usePathname, useRouter } from 'next/navigation'
+import {
+  Cross1Icon,
+  HamburgerMenuIcon,
+  HomeIcon,
+  ReaderIcon,
+  RocketIcon,
+} from '@radix-ui/react-icons'
 
 const Navbar: React.FC = () => {
   const path = usePathname()
   const router = useRouter()
   const [activePage, setActivePage] = useState('')
+  const [mobileMenu, setMobileMenu] = useState(false)
 
   useEffect(() => {
     setActivePage(path)
@@ -18,41 +26,92 @@ const Navbar: React.FC = () => {
 
   return (
     <main>
-      <nav className="fixed inset-x-0 top-0 z-20 bg-background backdrop-blur-sm">
-        <div className="container flex items-center justify-between py-4">
-          <h1 className="text-sm font-bold">MangaBox</h1>
-          <div className="">
-            <ul className="flex gap-10">
-              {menuList.map((menu) => (
-                <li
-                  key={menu.name}
-                  className={`text-sm font-semibold ${
-                    activePage === menu.path
-                      ? 'text-black dark:text-white'
-                      : 'opacity-60'
-                  }`}
+      <nav>
+        <div className="fixed inset-x-0 top-0 z-20 bg-background backdrop-blur-sm">
+          <div className="container flex items-center justify-between py-4">
+            <h1 className="text-sm font-bold">MangaBox</h1>
+            <div className="hidden md:flex">
+              <ul className="flex gap-10">
+                {menuList.map((menu) => (
+                  <li
+                    key={menu.name}
+                    className={`text-sm font-semibold ${
+                      activePage === menu.path
+                        ? 'text-black dark:text-white'
+                        : 'opacity-60'
+                    }`}
+                  >
+                    <Link href={menu.path}>{menu.name}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="hidden items-center gap-2 md:flex">
+              <Button
+                variant={'default'}
+                size={'sm'}
+                onClick={() => router.push('/auth/signin')}
+              >
+                Sign In
+              </Button>
+              <Button
+                variant={'outline'}
+                size={'sm'}
+                onClick={() => router.push('/auth/signup')}
+              >
+                Sign Up
+              </Button>
+              <ModeToggle />
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <div className="md:hidden">
+              <Button
+                size={'sm'}
+                variant={'outline'}
+                onClick={() => setMobileMenu(!mobileMenu)}
+              >
+                {mobileMenu ? <Cross1Icon /> : <HamburgerMenuIcon />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          {mobileMenu && (
+            <div className="container border-b-2 py-4 md:hidden">
+              <div className="flex flex-col gap-4">
+                <Button
+                  variant={'default'}
+                  size={'sm'}
+                  onClick={() => router.push('/auth/signin')}
                 >
-                  <Link href={menu.path}>{menu.name}</Link>
+                  Sign In
+                </Button>
+                <Button
+                  variant={'outline'}
+                  size={'sm'}
+                  onClick={() => router.push('/auth/signup')}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Mobile Navbar */}
+        <div className="absolute inset-x-4 bottom-4 rounded-full bg-white/10 py-4 shadow-md backdrop-blur-sm lg:hidden">
+          <div>
+            <ul className="flex justify-around">
+              {menuList.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.path}>
+                    {item.path === '/' && <HomeIcon />}
+                    {item.path === '/trending' && <RocketIcon />}
+                    {item.path === '/about' && <ReaderIcon />}
+                  </Link>
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant={'default'}
-              size={'sm'}
-              onClick={() => router.push('/auth/signin')}
-            >
-              Sign In
-            </Button>
-            <Button
-              variant={'ghost'}
-              size={'sm'}
-              onClick={() => router.push('/auth/signup')}
-            >
-              Sign Up
-            </Button>
-            <ModeToggle />
           </div>
         </div>
       </nav>

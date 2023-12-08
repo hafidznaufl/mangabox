@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, ChangeEvent, FormEvent } from 'react'
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react'
 import {
   Card,
   CardContent,
@@ -12,10 +12,14 @@ import {
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
 import { Separator } from './ui/separator'
-import { signIn } from 'next-auth/react'
-import { GitHubLogoIcon } from '@radix-ui/react-icons'
+import { signIn, useSession } from 'next-auth/react'
+import {
+  EyeClosedIcon,
+  EyeOpenIcon,
+  GitHubLogoIcon,
+} from '@radix-ui/react-icons'
+import { redirect, useRouter } from 'next/navigation'
 
 type FormData = {
   email: string
@@ -24,10 +28,22 @@ type FormData = {
 
 export default function SignIn() {
   const router = useRouter()
+  const [showPassword, setShowPassword] = useState<boolean>(false)
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: '',
   })
+  const { data: session } = useSession()
+
+  useEffect(() => {
+    if (session) {
+      router.push('/dashboard')
+    }
+  }, [session, router])
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword)
+  }
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -41,7 +57,7 @@ export default function SignIn() {
     e.preventDefault()
 
     try {
-      const signInRes = await fetch('http://localhost:3000/api/auth/signin', {
+      const validateRes = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,16 +65,28 @@ export default function SignIn() {
         body: JSON.stringify(formData),
       })
 
-      if (!signInRes.ok) {
-        const errorData = await signInRes.json()
-        console.error('Sign-in failed:', errorData.message)
+      const validateData = await validateRes.json()
+
+      if (
+        !validateRes.ok ||
+        validateData.status !== 200 ||
+        !validateData.message
+      ) {
+        console.error(
+          'Credential validation failed:',
+          validateData.message || 'Unknown error',
+        )
         return
       }
 
-      const userData = await signInRes.json()
-      console.log('Sign-in successful', userData)
+      await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      })
 
-      router.push('/')
+      console.log('SignIn Success')
+      redirect('/dashboard')
     } catch (error) {
       console.error('Error during sign-in:', error)
     }
@@ -89,16 +117,25 @@ export default function SignIn() {
               <Label className="mb-2" htmlFor="password">
                 Password:
               </Label>
-              <Input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                />
+                <button
+                  type="button"
+                  className="top absolute right-3 top-[10px] focus:outline-none"
+                  onClick={handleTogglePassword}
+                >
+                  {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+                </button>
+              </div>
             </div>
             <p className="text-sm">
-              Don't have an account?{' '}
+              Don't have an account ?
               <b
                 className="cursor-pointer"
                 onClick={() => router.push('/auth/signup')}

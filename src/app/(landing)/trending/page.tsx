@@ -1,9 +1,13 @@
+'use client'
+
 import LandingLayout from '@/components/layout/landing'
 
-export default function page() {
+export default function Home() {
   return (
-    <div>
-      <LandingLayout>Trending</LandingLayout>
-    </div>
+    <LandingLayout>
+      <div className="flex min-h-screen items-center justify-center">
+        Trending
+      </div>
+    </LandingLayout>
   )
 }

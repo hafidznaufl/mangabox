@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     if (!email || !password) {
       return NextResponse.json({
         status: 400,
-        message: 'Email or Password are Required',
+        message: 'Email or Password is required',
       })
     }
 
@@ -20,18 +20,30 @@ export async function POST(req: NextRequest) {
     })
 
     if (!user) {
-      return NextResponse.json({ status: 404, message: 'User Not Found' })
+      return NextResponse.json({
+        status: 404,
+        message: 'User not found',
+      })
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (!passwordMatch) {
-      return NextResponse.json({ status: 400, message: 'Invalid Password' })
+      return NextResponse.json({
+        status: 400,
+        message: 'Invalid Password',
+      })
     }
 
-    return NextResponse.json('Login successful')
+    return NextResponse.json({
+      status: 200,
+      message: 'Login successful',
+    })
   } catch (error) {
     console.error('Login error:', error)
-    return NextResponse.json('Internal Server Error')
+    return NextResponse.json({
+      status: 500,
+      message: 'Internal Server Error',
+    })
   }
 }

@@ -38,17 +38,18 @@ export const options: NextAuthOptions = {
             },
           )
 
+          const data = await signInRes.json()
+
           if (!signInRes.ok) {
-            const errorData = await signInRes.json()
-            console.error('Sign-in failed:', errorData.message)
+            console.error('Sign-in failed:', data.message)
             return null
           }
 
-          const user = (await signInRes.json()) as User
+          const user = data as User
 
           return {
             name: user.name,
-            id: user.id.toString(),
+            id: user.id,
           } as User
         } catch (error) {
           console.error('Error during sign-in:', error)

@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
               {menuList.map((menu) => (
                 <li
                   key={menu.name}
-                  className={`text-sm font-medium ${
+                  className={`text-sm font-semibold ${
                     activePage === menu.path
                       ? 'text-black dark:text-white'
                       : 'opacity-60'

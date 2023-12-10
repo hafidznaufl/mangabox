@@ -1,5 +1,4 @@
 import Sidebar from '../sidebar'
-import Logo from '../ui/logo'
 
 export default function DashboardLayout({
   children,
@@ -7,7 +6,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="container grid min-h-screen place-items-center">
+    <div className="container flex min-h-screen items-center justify-center">
       <Sidebar />
       {children}
     </div>

@@ -14,7 +14,11 @@ import {
   RocketIcon,
 } from '@radix-ui/react-icons'
 
-const Navbar: React.FC = () => {
+type NavbarProps = {
+  showMenu?: boolean
+}
+
+const Navbar: React.FC<NavbarProps> = ({ showMenu = true }) => {
   const path = usePathname()
   const router = useRouter()
   const [activePage, setActivePage] = useState('')
@@ -27,10 +31,14 @@ const Navbar: React.FC = () => {
   return (
     <main>
       <nav>
-        <div className="fixed inset-x-0 top-0 z-20 bg-background backdrop-blur-sm">
+        <div
+          className={`fixed inset-x-0 top-0 z-20  ${
+            showMenu ? 'backdrop-blur-sm' : ''
+          } `}
+        >
           <div className="container flex items-center justify-between py-4">
-            <h1 className="text-sm font-bold">MangaBox</h1>
-            <div className="hidden md:flex">
+            <h1 className="text-sm font-bold my-1">MangaBox</h1>
+            <div className={`hidden md:flex ${showMenu ? '' : 'md:hidden'}`}>
               <ul className="flex gap-10">
                 {menuList.map((menu) => (
                   <li
@@ -46,7 +54,11 @@ const Navbar: React.FC = () => {
                 ))}
               </ul>
             </div>
-            <div className="hidden items-center gap-2 md:flex">
+            <div
+              className={`hidden items-center gap-2 md:flex ${
+                showMenu ? '' : 'md:invisible'
+              }`}
+            >
               <Button
                 variant={'default'}
                 size={'sm'}

@@ -1,6 +1,7 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import DashboardLayout from '@/components/layout/dashboard'
+import Logo from '@/components/ui/logo'
 import { signOut, useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 
@@ -13,8 +14,10 @@ export default function page() {
   })
 
   return (
-    <div className="grid min-h-screen place-items-center">
-      {session ? <Button onClick={() => signOut()}>Sign Out</Button> : null}
-    </div>
+    <>
+      <DashboardLayout>
+          <Logo />
+      </DashboardLayout>
+    </>
   )
 }

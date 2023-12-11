@@ -24,7 +24,7 @@ export default function ProfileCard({ user }: ProfileProps) {
         </Avatar>
         <CardHeader>
           <CardTitle>{user?.name}</CardTitle>
-          <CardDescription>Lorem ipsum dolor sit</CardDescription>
+          <CardDescription>Lorem ipsum dolor</CardDescription>
         </CardHeader>
       </div>
     </>

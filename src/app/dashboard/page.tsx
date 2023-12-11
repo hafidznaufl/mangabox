@@ -1,5 +1,6 @@
 'use client'
 
+import { ModeToggle } from '@/components/dark-mode'
 import DashboardLayout from '@/components/layout/dashboard'
 import Logo from '@/components/ui/logo'
 import { signOut, useSession } from 'next-auth/react'
@@ -16,7 +17,10 @@ export default function page() {
   return (
     <>
       <DashboardLayout>
+        <div className="flex h-screen w-full items-center justify-center">
           <Logo />
+          <ModeToggle />
+        </div>
       </DashboardLayout>
     </>
   )

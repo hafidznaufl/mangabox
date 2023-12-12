@@ -8,9 +8,10 @@ import { Separator } from './ui/separator'
 import { useSession } from 'next-auth/react'
 import ProfileCard from './profile-card'
 import Logo from './ui/logo'
+import { ModeToggle } from './dark-mode'
 
 export default function Sidebar() {
-  const [showSidebar, setShowSidebar] = useState(true)
+  const [showSidebar, setShowSidebar] = useState(false)
   const { data: session } = useSession({
     required: true,
   })
@@ -23,16 +24,19 @@ export default function Sidebar() {
         }`}
       >
         {/* Sidebar Toggle */}
-        <div className="absolute -right-6 bottom-20">
-          <Button size={'icon'} onClick={() => setShowSidebar(!showSidebar)}>
+        <div className="absolute -right-6 bottom-4">
+          <Button
+            size={'icon'}
+            className='h-14'
+            onClick={() => setShowSidebar(!showSidebar)}
+          >
             {showSidebar ? <DoubleArrowRightIcon /> : <DoubleArrowLeftIcon />}
           </Button>
         </div>
         {/* Sidebar Menu */}
-        <div className="flex flex-col gap-4">
+        <div className={`${showSidebar ? 'hidden' : ''} flex flex-col gap-4`}>
+          <ModeToggle variants="outline" />
           <div>
-          </div>
-          <div className={`${showSidebar ? 'hidden' : ''}`}>
             <Separator />
             <ProfileCard user={session?.user} />
           </div>

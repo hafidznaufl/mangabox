@@ -57,7 +57,7 @@ export default function SignIn() {
     e.preventDefault()
 
     try {
-      const validateRes = await fetch('/api/auth/signin', {
+      const validateRes = await fetch('/api/auth/user/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function SignIn() {
       })
 
       console.log('SignIn Success')
-      redirect('/dashboard')
+      router.push('/dashboard')
     } catch (error) {
       console.error('Error during sign-in:', error)
     }

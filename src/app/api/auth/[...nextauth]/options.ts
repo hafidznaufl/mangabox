@@ -28,7 +28,7 @@ export const options: NextAuthOptions = {
       async authorize(credentials, req) {
         try {
           const signInRes = await fetch(
-            'http://localhost:3000/api/auth/signin',
+            'http://localhost:3000/api/auth/user/signin',
             {
               method: 'POST',
               headers: {

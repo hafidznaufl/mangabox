@@ -60,7 +60,7 @@ export default function SignUp() {
       }
 
       const emailCheckRes = await fetch(
-        `/api/auth/signup?email=${formData.email}`,
+        `/api/auth/user/signup?email=${formData.email}`,
       )
       const emailCheckData = await emailCheckRes.json()
 
@@ -74,7 +74,7 @@ export default function SignUp() {
         return
       }
 
-      const signupRes = await fetch('/api/auth/signup', {
+      const signupRes = await fetch('/api/auth/user/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

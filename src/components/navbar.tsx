@@ -37,7 +37,7 @@ const Navbar: React.FC<NavbarProps> = ({ showMenu = true }) => {
           } `}
         >
           <div className="container flex items-center justify-between py-4">
-            <h1 className="text-sm font-bold my-1">MangaBox</h1>
+            <h1 className="my-1 text-sm font-bold">MangaBox</h1>
             <div className={`hidden md:flex ${showMenu ? '' : 'md:hidden'}`}>
               <ul className="flex gap-10">
                 {menuList.map((menu) => (
@@ -67,13 +67,13 @@ const Navbar: React.FC<NavbarProps> = ({ showMenu = true }) => {
                 Sign In
               </Button>
               <Button
-                variant={'outline'}
+                variant={'ghost'}
                 size={'sm'}
                 onClick={() => router.push('/auth/signup')}
               >
                 Sign Up
               </Button>
-              <ModeToggle />
+              <ModeToggle variants="ghost" />
             </div>
 
             {/* Mobile Menu Toggle */}

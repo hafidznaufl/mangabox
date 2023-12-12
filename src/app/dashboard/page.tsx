@@ -2,6 +2,7 @@
 
 import { ModeToggle } from '@/components/dark-mode'
 import DashboardLayout from '@/components/layout/dashboard'
+import { Button } from '@/components/ui/button'
 import Logo from '@/components/ui/logo'
 import { signOut, useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
@@ -19,7 +20,7 @@ export default function page() {
       <DashboardLayout>
         <div className="flex h-screen w-full items-center justify-center">
           <Logo />
-          <ModeToggle />
+          <Button onClick={() => signOut()}>Sign Out</Button>
         </div>
       </DashboardLayout>
     </>

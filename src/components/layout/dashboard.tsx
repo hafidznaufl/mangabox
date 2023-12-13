@@ -1,4 +1,6 @@
 import Sidebar from '../sidebar'
+import Logo from '../ui/logo'
+import { ScrollArea } from '../ui/scroll-area'
 
 export default function DashboardLayout({
   children,
@@ -6,9 +8,12 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen items-center">
+    <div className="flex min-h-screen items-center overflow-y-hidden">
+      <Logo />
       <Sidebar />
-      {children}
+      <ScrollArea className="flex h-screen w-full items-center justify-center overflow-auto">
+        {children}
+      </ScrollArea>
     </div>
   )
 }

@@ -1,12 +1,11 @@
 import Navbar from '@/components/navbar'
-import SignUp from '@/components/signup'
-import Logo from '@/components/ui/logo'
+import SignUpForm from '@/components/signup'
 
-export default function page() {
+export default function SignUp() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <Navbar showMenu={false} />
-      <SignUp />
+      <SignUpForm />
     </div>
   )
 }

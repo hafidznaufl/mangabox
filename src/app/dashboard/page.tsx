@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 import { redirect, useRouter } from 'next/navigation'
 
-export default function page() {
+export default function Dashboard() {
   const router = useRouter()
   const { data: session } = useSession({
     required: true,

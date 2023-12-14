@@ -26,7 +26,7 @@ type FormData = {
   password: string
 }
 
-export default function SignIn() {
+export default function SignInForm() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [formData, setFormData] = useState<FormData>({

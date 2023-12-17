@@ -9,7 +9,6 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="flex min-h-screen items-center overflow-y-hidden">
-      <Logo />
       <Sidebar />
       <ScrollArea className="flex h-screen w-full items-center justify-center overflow-auto">
         {children}

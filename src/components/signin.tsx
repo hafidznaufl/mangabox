@@ -20,6 +20,7 @@ import {
   GitHubLogoIcon,
 } from '@radix-ui/react-icons'
 import { redirect, useRouter } from 'next/navigation'
+import { useToast } from './ui/use-toast'
 
 type FormData = {
   email: string
@@ -28,6 +29,7 @@ type FormData = {
 
 export default function SignInForm() {
   const router = useRouter()
+  const { toast } = useToast()
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -57,6 +59,24 @@ export default function SignInForm() {
     e.preventDefault()
 
     try {
+      if (!formData.email || !formData.password) {
+        toast({
+          title: 'Validation Error',
+          description: 'Please fill out all fields.',
+        })
+        return
+      }
+
+      // Simple email validation using regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        toast({
+          title: 'Validation Error',
+          description: 'Please enter a valid email address.',
+        })
+        return
+      }
+
       const validateRes = await fetch('/api/auth/user/signin', {
         method: 'POST',
         headers: {
@@ -72,10 +92,10 @@ export default function SignInForm() {
         validateData.status !== 200 ||
         !validateData.message
       ) {
-        console.error(
-          'Credential validation failed:',
-          validateData.message || 'Unknown error',
-        )
+        toast({
+          title: 'Error',
+          description: validateData.message || 'Unknown error',
+        })
         return
       }
 
@@ -85,10 +105,18 @@ export default function SignInForm() {
         redirect: false,
       })
 
-      console.log('SignIn Success')
+      toast({
+        title: 'Success',
+        description: 'Sign-in successful!',
+      })
+
       router.push('/dashboard')
     } catch (error) {
       console.error('Error during sign-in:', error)
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+      })
     }
   }
 

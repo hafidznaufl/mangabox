@@ -17,3 +17,23 @@ export const menuList: NavigationItem[] = [
     name: 'About',
   },
 ]
+
+export const sidebarMenu: NavigationItem[] = [
+  {
+    path: '/dashboard',
+    name: 'Home'
+  },
+  {
+    path: '/dashboard/trending',
+    name: 'Trending'
+  },
+  {
+    path: '/dashboard/new',
+    name: 'New'
+  },
+  {
+    path: '/dashboard/updates',
+    name: 'Updates'
+  },
+
+]

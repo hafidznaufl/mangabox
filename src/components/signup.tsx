@@ -28,6 +28,11 @@ type FormData = {
   password: string
 }
 
+type emailData = {
+  status: string
+  message: string
+}
+
 export default function SignUpForm() {
   const router = useRouter()
   const { toast } = useToast()
@@ -55,22 +60,41 @@ export default function SignUpForm() {
 
     try {
       if (!formData.name || !formData.email || !formData.password) {
-        console.error('Please fill out all fields.')
+        toast({
+          title: 'Validation Error',
+          description: 'Please fill out all fields.',
+        })
+        return
+      }
+
+      // Simple email validation using regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(formData.email)) {
+        toast({
+          title: 'Validation Error',
+          description: 'Please enter a valid email address.',
+        })
         return
       }
 
       const emailCheckRes = await fetch(
         `/api/auth/user/signup?email=${formData.email}`,
       )
-      const emailCheckData = await emailCheckRes.json()
+      const emailCheckData: emailData = await emailCheckRes.json()
 
       if (!emailCheckRes.ok) {
-        console.error('Error checking email:', emailCheckData.message)
+        toast({
+          title: 'Error',
+          description: emailCheckData.message,
+        })
         return
       }
 
       if (emailCheckData && emailCheckData.status === 'error') {
-        console.error(emailCheckData.message)
+        toast({
+          title: 'Error',
+          description: emailCheckData.message,
+        })
         return
       }
 
@@ -84,14 +108,25 @@ export default function SignUpForm() {
 
       if (!signupRes.ok) {
         const errorData = await signupRes.json()
-        console.error('Sign-up failed:', errorData.message)
+        toast({
+          title: 'Sign-up Failed',
+          description: errorData.message,
+        })
         return
       }
 
-      console.log('Sign-up successful')
+      toast({
+        title: 'Success',
+        description: 'Sign-up successful!',
+      })
+
       router.push('/')
     } catch (error) {
       console.error('Error during sign-up:', error)
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred. Please try again.',
+      })
     }
   }
 
@@ -160,17 +195,7 @@ export default function SignUpForm() {
             </p>
           </CardContent>
           <CardFooter className="grid gap-6">
-            <Button
-              type="submit"
-              onClick={() =>
-                toast({
-                  title: 'Uh oh! Something went wrong.',
-                  description: 'There was a problem with your request.',
-                })
-              }
-            >
-              Sign Up
-            </Button>
+            <Button type="submit">Sign Up</Button>
             <Separator />
             <Button
               className="gap-2"

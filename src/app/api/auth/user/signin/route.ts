@@ -38,6 +38,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       status: 200,
       message: 'Login successful',
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     })
   } catch (error) {
     console.error('Login error:', error)

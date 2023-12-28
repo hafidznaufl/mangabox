@@ -19,7 +19,7 @@ import {
   EyeOpenIcon,
   GitHubLogoIcon,
 } from '@radix-ui/react-icons'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useToast } from './ui/use-toast'
 
 type FormData = {
@@ -57,6 +57,11 @@ export default function SignInForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (e.target instanceof HTMLButtonElement && e.target.name === 'github') {
+      console.log('Continue with Github button clicked')
+      return
+    }
 
     try {
       if (!formData.email || !formData.password) {
@@ -178,6 +183,7 @@ export default function SignInForm() {
             <Button
               className="gap-2"
               variant={'outline'}
+              name="github"
               onClick={() => signIn('github')}
             >
               <GitHubLogoIcon /> Continue with Github

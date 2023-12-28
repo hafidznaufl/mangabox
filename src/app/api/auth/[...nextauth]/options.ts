@@ -3,8 +3,9 @@ import GitHubProvider from 'next-auth/providers/github'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 interface User {
-  name: string
   id: string
+  name: string
+  email: string
 }
 
 export const options: NextAuthOptions = {
@@ -45,11 +46,19 @@ export const options: NextAuthOptions = {
             return null
           }
 
-          const user = data as User
+          if (!data.user) {
+            console.error('User data not provided in the response:', data)
+            return null
+          }
+
+          const user = data.user as User
+
+          console.log('User data from authorization:', user)
 
           return {
-            name: user.name,
             id: user.id,
+            name: user.name,
+            email: user.email,
           } as User
         } catch (error) {
           console.error('Error during sign-in:', error)
@@ -64,11 +73,18 @@ export const options: NextAuthOptions = {
   },
   callbacks: {
     jwt({ token, user }) {
-      if (!user) return token
+      if (!user) {
+        console.log('No user data provided.')
+        return token
+      }
+
+      console.log('User data:', user)
 
       return {
         ...token,
         id: user.id,
+        name: user.name,
+        email: user.email,
       }
     },
     session({ session, token }) {

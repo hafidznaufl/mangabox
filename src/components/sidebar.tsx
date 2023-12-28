@@ -26,6 +26,8 @@ export default function Sidebar() {
     required: true,
   })
 
+  console.log(session)
+
   return (
     <div className="z-10 h-screen">
       <div

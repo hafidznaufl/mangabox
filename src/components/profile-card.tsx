@@ -20,11 +20,13 @@ export default function ProfileCard({ user }: ProfileProps) {
       <div className="flex flex-row items-center justify-center">
         <Avatar>
           <AvatarImage src={imageSrc} alt="Profile Picture"></AvatarImage>
-          <AvatarFallback>{user?.email?.slice(0, 2)}</AvatarFallback>
+          <AvatarFallback>
+            {user?.email?.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
         </Avatar>
         <CardHeader>
           <CardTitle>{user?.name}</CardTitle>
-          <CardDescription>Lorem ipsum dolor</CardDescription>
+          <CardDescription>{user?.email || 'Your Profile Account'}</CardDescription>
         </CardHeader>
       </div>
     </>
